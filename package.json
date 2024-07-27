@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "author": "Bartłomiej Rutkowski",
+  "repository": "https://github.com/rutkowskib/nest-firebase-remote-config",
   "license": "MIT",
   "scripts": {
     "build": "nest build",
