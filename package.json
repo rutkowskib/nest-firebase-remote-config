@@ -1,6 +1,6 @@
 {
   "name": "nest-firebase-remote-config",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "description": "",
   "author": "Bartłomiej Rutkowski",
   "repository": "https://github.com/rutkowskib/nest-firebase-remote-config",
