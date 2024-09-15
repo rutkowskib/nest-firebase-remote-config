@@ -21,6 +21,7 @@ export class FirebaseRemoteConfigModule {
             });
           },
         },
+        FirebaseRemoteConfigService,
       ],
       module: FirebaseRemoteConfigModule,
       exports: [FirebaseRemoteConfigService],
