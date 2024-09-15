@@ -1,5 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import admin from 'firebase-admin';
+import { FirebaseRemoteConfigService } from './services/firebase-remote-config.service';
 
 interface FirebaseRemoteConfigModuleOptions {
   firebaseServiceAccount: string;
@@ -22,7 +23,7 @@ export class FirebaseRemoteConfigModule {
         },
       ],
       module: FirebaseRemoteConfigModule,
-      exports: [FirebaseRemoteConfigModule],
+      exports: [FirebaseRemoteConfigService],
     };
   }
 }

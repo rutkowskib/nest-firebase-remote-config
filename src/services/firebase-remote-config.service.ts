@@ -2,8 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import admin, { remoteConfig } from 'firebase-admin';
 
 @Injectable()
-export class RemoteConfigService {
-  private readonly logger = new Logger(RemoteConfigService.name);
+export class FirebaseRemoteConfigService {
+  private readonly logger = new Logger(FirebaseRemoteConfigService.name);
 
   private template: remoteConfig.RemoteConfigTemplate;
   private templateFetchedTimestamp: number;

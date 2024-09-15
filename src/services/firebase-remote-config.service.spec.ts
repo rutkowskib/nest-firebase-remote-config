@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RemoteConfigService } from './remote-config.service';
+import { FirebaseRemoteConfigService } from './firebase-remote-config.service';
 import * as admin from 'firebase-admin';
 import { setTimeout } from 'node:timers/promises';
 
 jest.mock('firebase-admin');
 
 describe('RemoteConfigService', () => {
-  let service: RemoteConfigService;
+  let service: FirebaseRemoteConfigService;
 
   const getTemplate = jest.fn(() => ({
     parameters: {
@@ -20,9 +20,9 @@ describe('RemoteConfigService', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RemoteConfigService],
+      providers: [FirebaseRemoteConfigService],
     }).compile();
-    service = module.get<RemoteConfigService>(RemoteConfigService);
+    service = module.get<FirebaseRemoteConfigService>(FirebaseRemoteConfigService);
 
     Object.defineProperty(admin, 'remoteConfig', {
       value: jest.fn(() => ({
