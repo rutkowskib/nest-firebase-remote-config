@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FirebaseRemoteConfigService } from './firebase-remote-config.service';
 import * as admin from 'firebase-admin';
 import { setTimeout } from 'node:timers/promises';
+import { MODULE_OPTIONS_TOKEN } from '../firebase-remote-config.module-definition';
 
 jest.mock('firebase-admin');
 
@@ -20,9 +21,19 @@ describe('RemoteConfigService', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [FirebaseRemoteConfigService],
+      providers: [
+        {
+          provide: MODULE_OPTIONS_TOKEN,
+          useValue: {
+            ttl: 5000,
+          },
+        },
+        FirebaseRemoteConfigService,
+      ],
     }).compile();
-    service = module.get<FirebaseRemoteConfigService>(FirebaseRemoteConfigService);
+    service = module.get<FirebaseRemoteConfigService>(
+      FirebaseRemoteConfigService,
+    );
 
     Object.defineProperty(admin, 'remoteConfig', {
       value: jest.fn(() => ({
@@ -42,8 +53,8 @@ describe('RemoteConfigService', () => {
   });
 
   it('Should use cached template', async () => {
+    await setTimeout(5000); // make sure the cache is expired
     await service.getProperty('property');
-    await setTimeout(5000);
     await service.getProperty('property');
     expect(getTemplate).toHaveBeenCalledTimes(1);
   });

@@ -1,13 +1,11 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import admin from 'firebase-admin';
 import { FirebaseRemoteConfigService } from './services/firebase-remote-config.service';
-
-interface FirebaseRemoteConfigModuleOptions {
-  firebaseServiceAccount: string;
-}
+import { FirebaseRemoteConfigModuleOptions } from './firebase-remote-config.interface';
+import { ConfigurableModuleClass } from './firebase-remote-config.module-definition';
 
 @Module({})
-export class FirebaseRemoteConfigModule {
+export class FirebaseRemoteConfigModule extends ConfigurableModuleClass {
   static forRootAsync(
     options: FirebaseRemoteConfigModuleOptions,
   ): DynamicModule {
