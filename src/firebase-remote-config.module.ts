@@ -1,11 +1,16 @@
-import { DynamicModule, Module } from '@nestjs/common';
-import admin from 'firebase-admin';
+import { DynamicModule, Logger, Module } from '@nestjs/common';
+import admin, { ServiceAccount } from 'firebase-admin';
 import { FirebaseRemoteConfigService } from './services/firebase-remote-config.service';
 import { FirebaseRemoteConfigModuleOptions } from './firebase-remote-config.interface';
-import { ConfigurableModuleClass } from './firebase-remote-config.module-definition';
+import {
+  ConfigurableModuleClass,
+  MODULE_OPTIONS_TOKEN,
+} from './firebase-remote-config.module-definition';
 
 @Module({})
 export class FirebaseRemoteConfigModule extends ConfigurableModuleClass {
+  static logger = new Logger(FirebaseRemoteConfigModule.name);
+
   static forRootAsync(
     options: FirebaseRemoteConfigModuleOptions,
   ): DynamicModule {
@@ -14,15 +19,25 @@ export class FirebaseRemoteConfigModule extends ConfigurableModuleClass {
         {
           provide: 'FIREBASE_ADMIN',
           useFactory: async () => {
+            let cert: ServiceAccount;
+            try {
+              cert = JSON.parse(options.firebaseServiceAccount);
+            } catch (error) {
+              FirebaseRemoteConfigModule.logger.error(
+                'Failed to parse Firebase service account',
+                error.stack,
+              );
+              throw error;
+            }
             admin.initializeApp({
-              credential: admin.credential.cert(options.firebaseServiceAccount),
+              credential: admin.credential.cert(cert),
             });
           },
         },
         FirebaseRemoteConfigService,
       ],
       module: FirebaseRemoteConfigModule,
-      exports: [FirebaseRemoteConfigService],
+      exports: [FirebaseRemoteConfigService, MODULE_OPTIONS_TOKEN],
     };
   }
 }
