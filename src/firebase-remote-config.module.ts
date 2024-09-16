@@ -2,16 +2,13 @@ import { DynamicModule, Logger, Module } from '@nestjs/common';
 import admin, { ServiceAccount } from 'firebase-admin';
 import { FirebaseRemoteConfigService } from './services/firebase-remote-config.service';
 import { FirebaseRemoteConfigModuleOptions } from './firebase-remote-config.interface';
-import {
-  ConfigurableModuleClass,
-  MODULE_OPTIONS_TOKEN,
-} from './firebase-remote-config.module-definition';
+import { ConfigurableModuleClass } from './firebase-remote-config.module-definition';
 
 @Module({})
 export class FirebaseRemoteConfigModule extends ConfigurableModuleClass {
   static logger = new Logger(FirebaseRemoteConfigModule.name);
 
-  static forRootAsync(
+  static registerAsync(
     options: FirebaseRemoteConfigModuleOptions,
   ): DynamicModule {
     return {
@@ -37,7 +34,7 @@ export class FirebaseRemoteConfigModule extends ConfigurableModuleClass {
         FirebaseRemoteConfigService,
       ],
       module: FirebaseRemoteConfigModule,
-      exports: [FirebaseRemoteConfigService, MODULE_OPTIONS_TOKEN],
+      exports: [FirebaseRemoteConfigService],
     };
   }
 }
