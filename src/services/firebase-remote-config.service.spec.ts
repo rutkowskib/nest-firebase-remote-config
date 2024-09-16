@@ -8,12 +8,24 @@ jest.mock('firebase-admin');
 
 describe('RemoteConfigService', () => {
   let service: FirebaseRemoteConfigService;
+  const TTL = 5000;
 
   const getTemplate = jest.fn(() => ({
     parameters: {
       property: {
         defaultValue: {
           value: 'value',
+        },
+      },
+    },
+    parameterGroups: {
+      group: {
+        parameters: {
+          property: {
+            defaultValue: {
+              value: 'groupValue',
+            },
+          },
         },
       },
     },
@@ -25,7 +37,7 @@ describe('RemoteConfigService', () => {
         {
           provide: MODULE_OPTIONS_TOKEN,
           useValue: {
-            ttl: 5000,
+            ttl: TTL,
           },
         },
         FirebaseRemoteConfigService,
@@ -49,11 +61,15 @@ describe('RemoteConfigService', () => {
   it('Should get property', async () => {
     const property = await service.getProperty('property');
     expect(property).toEqual('value');
-    expect(getTemplate).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should get property from group', async () => {
+    const property = await service.getProperty('property', 'group');
+    expect(property).toEqual('groupValue');
   });
 
   it('Should use cached template', async () => {
-    await setTimeout(5000); // make sure the cache is expired
+    await setTimeout(TTL); // make sure the cache is expired
     await service.getProperty('property');
     await service.getProperty('property');
     expect(getTemplate).toHaveBeenCalledTimes(1);

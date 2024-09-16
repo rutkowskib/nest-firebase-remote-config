@@ -18,13 +18,24 @@ export class FirebaseRemoteConfigService {
   private template: remoteConfig.RemoteConfigTemplate;
   private templateFetchedTimestamp: number;
 
-  async getProperty(key: string): Promise<string> {
-    this.logger.debug(`Fetching remote config property for key: ${key}...`);
+  async getProperty(key: string, group?: string): Promise<string> {
+    this.logger.debug(
+      `Fetching remote config property for key: ${key} in group: ${group}...`,
+    );
     const template = await this.fetchTemplate();
-    const property = (
-      template.parameters[key]
-        .defaultValue as remoteConfig.ExplicitParameterValue
-    ).value;
+    let property: string;
+    if (group) {
+      property = (
+        template.parameterGroups[group]?.parameters[key]
+          ?.defaultValue as remoteConfig.ExplicitParameterValue
+      )?.value;
+    } else {
+      property = (
+        template.parameters[key]
+          .defaultValue as remoteConfig.ExplicitParameterValue
+      ).value;
+    }
+
     this.logger.debug(`Fetched remote config property for key: ${key}`, {
       property,
     });
