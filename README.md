@@ -1,6 +1,6 @@
 # nest-firebase-remote-config
 
----
+
 NestJS module used to fetch Firebase Remote Config values. Uses firebase-admin to connect to Firebase.
 
 Module implements very simple caching mechanism to avoid fetching remote config on every request.
@@ -43,6 +43,10 @@ export class AppService {
 
   async getParam(): Promise<string> {
     return this.firebaseConfigService.getProperty('param')
+  }
+  
+  async getParamFromGroup(): Promise<string> {
+    return this.firebaseConfigService.getProperty('param', 'group')
   }
 }
 ```
